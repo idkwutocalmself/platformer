@@ -1,4 +1,5 @@
 import pygame as pg
+import time
 from gravity import GravityObject
 
 class Block:
@@ -36,6 +37,7 @@ class Block:
 
 
 def main():
+    start = time.time()
     screen = pg.display.set_mode((800, 800))
     running = True
     pg.display.set_caption('Platformer')
@@ -52,6 +54,7 @@ def main():
               Block(180, 330, 50, 20, 'lr', 0, (370, 600)),Block(180, 0, 250, 15, 'ud', 0, (-1,-1),True),Block(230, 330, 150, 20, 'lr', 0, (370, 600), False, True),
               Block(380, 330, 50, 20, 'lr', 0, (370, 600)), Block(480, 330, 75, 20, 'ud', 3, (480, 50)), Block(650, 420, 50, 30, 'lr', 0, (370, 600), False, True)]
     lastTime = False
+    deaths = 0
     while running:
         floorBlock = 0
         currentFloor = 800
@@ -101,6 +104,7 @@ def main():
                     if block.isLava:
                         p.x = 10
                         p.y = 770
+                        deaths += 1
                         p.jumping = False
                     else:
                         if block.x > p.x - 10:
@@ -124,6 +128,7 @@ def main():
                     if block.isLava:
                         p.x = 10
                         p.y = 770
+                        deaths += 1
                         p.jumping = False
                     else:
                         if block.x > p.x - 10:
@@ -144,13 +149,16 @@ def main():
             p.acceleration = 0.4
         if p.floor <= p.y + 10 <= p.floor + blocks[floorBlock].height and floorIsLava:
             p.x = 10
+            deaths += 1
             p.y = 770
+            p.jumping = False
         for block in blocks:
             if block.x - 10 < p.x < block.x + block.width + 10 and block.y - 10 < p.y < block.y + block.height + 10:
                 if block.isLava:
                     p.jumping = False
                     p.x = 10
                     p.y = 770
+                    deaths += 1
 
                 else:
                     if block.x > p.x-10:
@@ -184,15 +192,26 @@ def main():
     image = pg.image.load(r'prize.png')
     font = pg.font.SysFont('Arial', 30)
     pg.display.set_caption('You Win!')
+    end = time.time()
+    totalTime = int(end - start)
     while 1:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-        text_surface = font.render('You Win! Press c to claim your prize.', True, (10, 245, 143))
+        text_surface1 = font.render('You Win!', True, (10, 245, 143))
+        text_rect = text_surface1.get_rect(center=(400, 300))
+        screen.blit(text_surface1, text_rect)
+        text_surface2 = font.render(f'Your final time is {totalTime // 3600} hours, {totalTime // 60} minutes, and {totalTime % 60} seconds.', True, (10, 245, 143))
         if pg.key.get_pressed()[pg.K_c]:
             break
-        text_rect = text_surface.get_rect(center=(400, 400))
-        screen.blit(text_surface, text_rect)
+        text_rect = text_surface2.get_rect(center=(400, 400))
+        screen.blit(text_surface2, text_rect)
+        text_surface3 = font.render(f'You died {deaths} times.', True, (10, 245, 143))
+        text_rect = text_surface3.get_rect(center=(400, 500))
+        screen.blit(text_surface3, text_rect)
+        text_surface4 = font.render('Press C to claim your prize.',True, (10, 245, 143))
+        text_rect = text_surface4.get_rect(center=(400, 600))
+        screen.blit(text_surface4, text_rect)
         pg.display.update()
         clock.tick(60)
         screen.fill('orange')
