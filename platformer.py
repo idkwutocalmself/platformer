@@ -199,18 +199,18 @@ def main():
             if event.type == pg.QUIT:
                 return
         text_surface1 = font.render('You Win!', True, (10, 245, 143))
-        text_rect = text_surface1.get_rect(center=(400, 300))
+        text_rect = text_surface1.get_rect(center=(400, 250))
         screen.blit(text_surface1, text_rect)
         text_surface2 = font.render(f'Your final time is {totalTime // 3600} hours, {totalTime // 60} minutes, and {totalTime % 60} seconds.', True, (10, 245, 143))
         if pg.key.get_pressed()[pg.K_c]:
             break
-        text_rect = text_surface2.get_rect(center=(400, 400))
+        text_rect = text_surface2.get_rect(center=(400, 350))
         screen.blit(text_surface2, text_rect)
         text_surface3 = font.render(f'You died {deaths} times.', True, (10, 245, 143))
-        text_rect = text_surface3.get_rect(center=(400, 500))
+        text_rect = text_surface3.get_rect(center=(400, 450))
         screen.blit(text_surface3, text_rect)
         text_surface4 = font.render('Press C to claim your prize.',True, (10, 245, 143))
-        text_rect = text_surface4.get_rect(center=(400, 600))
+        text_rect = text_surface4.get_rect(center=(400, 550))
         screen.blit(text_surface4, text_rect)
         pg.display.update()
         clock.tick(60)
